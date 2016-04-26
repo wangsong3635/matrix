@@ -55,13 +55,32 @@
       .reveal .slides li {
         text-transform: none;
       }
+
+    .words {
+      overflow: hidden;
+      position: relative;
+      -webkit-animation: barrage 8s;
+    }
+    @-webkit-keyframes barrage {
+      0%  {left: 0;}
+      100% {left: 100%;}
+      
+    }
+
     </style>
 </head>
 <body>
   <%if(http.get('theme') === 'print-pdf'){%>
     <div class="noprint">选择浏览器“打印预览”预览效果</div>
   <%}%>
+  
   <div class="reveal">
+    <div id="ws-url">
+      
+    </div>
+    <div id="comments" class="words">
+      testtest
+    </div>
     <div class="slides" id="main">
     </div>
   </div>
