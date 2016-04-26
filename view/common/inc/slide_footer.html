@@ -16,12 +16,12 @@ function initReveal(){
       { src: '/static/js/jquery.min.js' },
 
       { src: '/static/js/jquery.color.js' },
-      
+
       { src: '/static/module/reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
       { src: '/static/module/reveal/plugin/zoom-js/zoom.js', async: true },
       { src: '/static/module/reveal/plugin/notes/notes.js', async: true },
 
-      { src: '/static/module/reveal/plugin/prism/prism.js', condition: function() { return !!document.querySelector('pre code'); }, callback: function() { 
+      { src: '/static/module/reveal/plugin/prism/prism.js', condition: function() { return !!document.querySelector('pre code'); }, callback: function() {
         var theme = "<%=http.get('theme') || slide.theme || 'default'%>";
         var hightLightTheme;
 
@@ -34,7 +34,7 @@ function initReveal(){
           simple: 'coy',
           'print-pdf' : 'coy',
           white: 'coy'
-        }; 
+        };
 
         hightLightTheme = hlThemeMap[theme];
 
@@ -43,7 +43,7 @@ function initReveal(){
         if(!hightLightTheme){
           link.href = '/static/module/reveal/plugin/prism/themes/prism.css';
         }else{
-          link.href = '/static/module/reveal/plugin/prism/themes/prism-' 
+          link.href = '/static/module/reveal/plugin/prism/themes/prism-'
             + hightLightTheme + '.css';
         }
         document.getElementsByTagName('head')[0].appendChild(link);
@@ -54,11 +54,11 @@ function initReveal(){
         });
         Prism.highlightAll();
       } },
-      
+
       { src: '/static/module/reveal/plugin/chat/socket-io.js', condition: function(){ return !!document.querySelector('[data-chat]'); } },
       { src: '/static/module/reveal/plugin/chat/qrcode.js', condition: function(){ return !!document.querySelector('[data-chat]'); } },
       { src: '/static/module/reveal/plugin/chat/chat.js', condition: function(){ return !!document.querySelector('[data-chat]'); }, async: true },
-      
+
       { src: '/static/module/reveal/plugin/js-sequence-diagrams/raphael.min.js', condition: function(){ return !!document.querySelector('.diagram') } },
       { src: '/static/module/reveal/plugin/js-sequence-diagrams/underscore.min.js', condition: function(){ return !!document.querySelector('.diagram') } },
       { src: '/static/module/reveal/plugin/js-sequence-diagrams/sequence-diagram.js', condition: function(){ return !!document.querySelector('.diagram') }, callback: function(){
@@ -66,7 +66,7 @@ function initReveal(){
             display: 'inline-block',
             padding: '1.2em'
           });
-          $('.diagram').sequenceDiagram({theme: 'hand', 
+          $('.diagram').sequenceDiagram({theme: 'hand',
             fontSize: parseInt($('.diagram').css('fontSize') || 26),
             color: $('.diagram').css('color')
           });
@@ -124,12 +124,12 @@ function initReveal(){
                         var type = 'echarts/chart/' + magicTypes[i];
                         if(deps.indexOf(type) < 0){
                           deps.push(type);
-                        }                        
+                        }
                       }
                     }
                   }
                 }
-                
+
                 require(deps, function(ec, theme){
                     function resetColor(obj, path, color){
                       var ns = path.split('.');
@@ -144,11 +144,11 @@ function initReveal(){
 
                       root[ns[i]] = color;
                     }
-                    
+
                     var div = slide.querySelector('.echart');
 
                     if(theme){
-                      var color = $(slide).attr('data-background') 
+                      var color = $(slide).attr('data-background')
                           || $(slide).css('background-color');
 
                       color = $.Color(color);
@@ -167,31 +167,31 @@ function initReveal(){
                       resetColor(theme, 'gauge.title.textStyle.color', color);
                     }
 
-                    var myChart = ec.init(div, theme); 
+                    var myChart = ec.init(div, theme);
 
-                    // 为echarts对象加载数据 
+                    // 为echarts对象加载数据
                     setTimeout(function(){
-                      myChart.setOption(options); 
+                      myChart.setOption(options);
                     }, 100);
 
                   });
               }
             }
-          } 
-          
-          Reveal.addEventListener('ready', showcharts); 
-          Reveal.addEventListener('slidechanged', showcharts);  
-          
+          }
+
+          Reveal.addEventListener('ready', showcharts);
+          Reveal.addEventListener('slidechanged', showcharts);
+
           if(isPDF()){
             Reveal.addEventListener('ready', function(event){
-              //{currentSlide: 
+              //{currentSlide:
               var slides = document.querySelectorAll('.slide section');
               for(var i = 0; i < slides.length; i++){
                 showcharts({currentSlide: slides[i]});
               }
-            }); 
-          }   
-      } }, 
+            });
+          }
+      } },
     ]
   });
 }
@@ -286,7 +286,7 @@ function initReveal(){
     slides[i] = parsed;
   }
 
-  if(/\$\$[\s\S]*?\$\$/m.test(content) 
+  if(/\$\$[\s\S]*?\$\$/m.test(content)
     || /\\\[[\s\S]*?\\\]/m.test(content)
     || /\\\([\s\S]*?\\\)/m.test(content)){
     //Load mathjax
@@ -313,7 +313,7 @@ function initReveal(){
           MathJax.Hub.Queue( [ 'Typeset', MathJax.Hub, event.currentSlide ] );
 
         } );
-      });  
+      });
     });
   }
 
@@ -334,4 +334,9 @@ function initReveal(){
 </script>
 <script src="/static/module/reveal/plugin/markdown/marked.js"></script>
 <script src="/static/module/reveal/plugin/markdown/markdown.js"></script>
+<script src="/static/js/socket.io.js" charset="utf-8"></script>
+<script type="text/javascript">
+  var socket = io('http://localhost:9360');
+  socket.emit("createroom", "12312312" + Date.now());
+</script>
 </html>
