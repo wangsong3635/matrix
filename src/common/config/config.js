@@ -6,5 +6,5 @@ export default {
   //key: value
   route_on: true,
   uuap: false,
-  port: 9360
+  port: 8080
 };

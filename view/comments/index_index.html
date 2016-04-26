@@ -47,7 +47,7 @@
 	<script>
 		(function(){
 			var Config = {
-				baseUrl: '127.0.0.1:9360/',
+				baseUrl: '10.19.136.169:8080/',
 			};
 			var mySocket = (function() {
 				var socket = io(Config.baseUrl);
@@ -62,7 +62,7 @@
 				//发送事件
 				var sendComments = function(content) {
 					socket.emit("comments", {
-						id: '<%= id %>',
+						courseId: '<%= id %>',
 						content: content
 					});
 				};

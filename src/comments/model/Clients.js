@@ -1,27 +1,29 @@
 'use strict'
+
+let clients = new Map();
+console.log('clients constructor.......');
 export default class Clients {
-	constructor() {
-		this.clients = new Set();
-	}
 
 	addSocket(id, socket) {
-		let client = new Map({id, socket});
-		clients.add(client);
+		clients.set(id, socket);
 	}
 
-	deleteSocket(id) {
-		clients.forEach(function(client) {
-			if(client.get('id') === id) {
-				clients.delete(client);
+	deleteSocketById(id) {
+		clients.delete(id);
+	}
+	deleteSocketBySocket(socket) {
+		for(let [key, value] of clients.entries()) {
+			if(value === socket) {
+				clients.delete(key);
 			}
-		})
+		}
 	}
-
 	getSocket(id) {
-		clients.forEach(function(client) {
-			if(client.get('id') === id) {
-				return client.get('socket');
-			}
-		})
+		console.log('id: ' + id, typeof id);
+		return clients.get(id);
+	}
+
+	isHasId(id) {
+		return clients.has(id);
 	}
 }
