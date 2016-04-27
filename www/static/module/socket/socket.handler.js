@@ -1,7 +1,7 @@
 (function(){
 	var Config = {
-		baseUrl: '127.0.0.1:8080/',
-		commentsUrl: '127.0.0.1:8080/comments/'
+		baseUrl: 'http://10.19.136.169:8080/',
+		commentsUrl: 'http://10.19.136.169:8080/comments/'
 	}
 	var mySocket = (function() {
 		var socket = io(Config.baseUrl);
@@ -9,7 +9,7 @@
 		console.log('connected...');
 		//发送事件
 		socket.emit("addcourse", {
-			courseId: '123456'
+			addcourse: 'yes'
 		});
 		//监听事件
 		socket.on("addsuccess", function(data){
@@ -25,16 +25,18 @@
 	var myView = (function() {
 		var urlDiv = document.getElementById('ws-url');
 		var commentsDiv = document.getElementById('ws-comments');
+		
 
 		var showTheUrl = function(id) {
 			urlDiv.innerHTML = Config.commentsUrl + '?id=' + id;
 		};
-		// var showComments = function(comments) {
-		// 	commentsDiv.innerHTML = comments;
-		// 	commentsDiv.setAttribute('class', 'words');
-		// 	setTimeout(hideComments, 8000);
-		// };
-
+		var showCode = function(id) {
+			var commentsUrl = Config.commentsUrl + '?id=' + id;
+			var codeRequestUrl = 'http://api.wwei.cn/wwei.html?data=' + commentsUrl +'&&version=1.0&apikey=20160427138671&callback=show2code';
+			var scriptNode = document.createElement('script');
+			scriptNode.setAttribute('src', codeRequestUrl);
+			document.body.appendChild(scriptNode);
+		}
 		var word = function(text){
 		      this.content = text;
 		      this.node = document.createElement("span");
@@ -59,7 +61,7 @@
 		}
 
 		return {
-			showTheUrl: showTheUrl,
+			showTheUrl: showCode,
 			showComments: word
 		}
 	})();

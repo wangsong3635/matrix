@@ -1,123 +1,266 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-	<title>评论。。。</title>
-</head>
-<style>
-	textarea#comments {
-	    width: 100%;
-	    font-size: 20px;
-	    padding: 5px;
-	    box-sizing: border-box;
-	}
-	button#submit {
-		padding: 10px;
-		width: 100px;
-		height: 50px;
-		background-color: blue;
-		color: #fff;
-		border: none;
-		font-size: 20px;
-	}
-	.show {
-		display: block;
-	}
-	.hide {
-		display: none;
-	}
-</style>
-
-<body>
-	<div class="container">
-		<div class="form">
-			<div>
-				<textarea name="comments" id="comments" cols="30" rows="10" placeholder="question..."></textarea>
-			</div>
-			<div>
-				<button id="submit">提交</button>
-			</div>
-		</div>
-		<div id="success_tip" class="hide">
-			发送成功
-		</div>
-	</div>
-	<script src="/static/module/socket/socket.io.js"></script>
-	<script>
-		(function(){
-			var Config = {
-				baseUrl: '10.19.136.169:8080/',
-			};
-			var mySocket = (function() {
-				var socket = io(Config.baseUrl);
-
-				console.log('connected...');
-				
-				//监听事件
-				socket.on('comments', function(data) {
-					console.log(data);
-					myView.showSendSuccess();
-				});
-				//发送事件
-				var sendComments = function(content) {
-					socket.emit("comments", {
-						courseId: '<%= id %>',
-						content: content
-					});
-				};
-				return {
-					sendComments: sendComments
-				}
-			})();
-
-			//屏蔽浏览器差异，添加、删除事件监听的工具类
-			var EventUtil = {
-
-			    addHandler: function (element, type, handler) {
-			        if(element.addEventListener) {
-			            element.addEventListener(type, handler, false);
-			        } else if(element.attachEvent) {
-			            element.attachEvent('on' + type, handler);
-			        } else {
-			            element['on' + type] = handler;
-			        }
-			    },
-			    removeHandler: function (element, type, handler) {
-			        if(element.removeEventListener) {
-			            element.removeEventListener(type, handler, false);
-			        } else if(element.detachEvent) {
-			            element.detachEvent('on' + type, handler);
-			        } else {
-			            element['on' + type] = null;
-			        }
-			    }
-			};
-
-			var myView = (function() {
-				var commentsDiv = document.getElementById('comments');
-				var submitBtn = document.getElementById('submit');
-				var success_tip = document.getElementById('success_tip');
-				EventUtil.addHandler(submitBtn, 'click', function() {
-					getComments();
-				});
-				var getComments = function() {
-					var content = commentsDiv.value;
-					console.log(content);
-					mySocket.sendComments(content);
-				};
-				var hideSuccessTip = function() {
-					success_tip.setAttribute('class', 'hide');
-				}
-				var showSendSuccess = function() {
-					success_tip.setAttribute('class', 'show');
-					setTimeout(hideSuccessTip, 3000);
-				}
-				return {
-					showSendSuccess: showSendSuccess
-				}
-			})();
-		})();
-	</script>
+<!DOCTYPE html>  
+<html>  
+<head>  
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>弹幕发送界面</title>  
+    <style>  
+  /**重置标签默认样式*/   
+        * {   
+            margin: 0;   
+            padding: 0;   
+            list-style: none;   
+            font-family: '微软雅黑';
+        } 
+        body,html {
+            height: 100%;
+        }
+        body {
+            padding-top: 40px;
+            padding-bottom: 70px;
+            box-sizing: border-box;
+        }
+        ul li {
+           margin-left: -17px;
+           margin-bottom: 10px
+        }
+        ul li span {
+             width: (100% - 102px);
+             overflow-wrap: break-word;
+        }  
+        #container {   
+            width: 100%;   
+            height: 100%;   
+            background-color: #eee;       
+            /*box-shadow: 20px 20px 55px #777; */  
+        }   
+        .header {   
+            background-color: #000;   
+            height: 40px;   
+            color: #fff;   
+            line-height: 34px;   
+            font-size: 20px;   
+            padding: 0 10px; 
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            z-index: 20; 
+        }   
+        .footer {   
+            width: 100%;   
+            height: 50px;   
+            background-color: #666;   
+            position: fixed;   
+            bottom: 0; 
+            left: 0;  
+            padding: 10px 0;   
+        }   
+        .footer input {   
+           /*width: 275px;*/  
+            height: 40px;   
+            outline: none;   
+            line-height: 40px;
+            font-size: 20px;   
+            text-indent: 10px;   
+            border-radius: 6px; 
+            width: 60%;
+            margin-left: 2%;     
+        }   
+        .footer span {   
+            display: inline-block;   
+            width: 18%;   
+            margin-left: 2%;
+            height: 40px;   
+            background-color: #ccc;   
+            font-weight: 900;   
+            line-height: 40px;   
+            cursor: pointer;   
+            text-align: center;   
+            border-radius: 6px;   
+        }   
+        .footer span:hover {   
+            color: #fff;   
+            background: #999;   
+        }   
+        #user_face_icon {   
+            display: inline-block;   
+            background-color: red;   
+            width: 40px;   
+            height: 40px;   
+            border-radius: 50%;   
+            cursor: pointer;  
+            margin-left: 2%; 
+            overflow: hidden;
+            vertical-align: -15px;
+            margin-top: 7px;
+        }   
+        img {   
+            width: 40px;   
+            height: 40px;   
+        }   
+        .content {   
+            font-size: 20px;   
+            /*width: 100%;*/   
+            height: 100%;   
+            overflow: auto;          
+        }   
+        .content li {   
+            margin-top: 10px;   
+            padding-left: 10px;   
+            width: 100%;   
+            display: block;   
+            clear: both;   
+            overflow: hidden;   
+        }   
+        .content li img {   
+            float: right;   
+        }   
+        .content li span{   
+            background-color: #f6ff00; 
+            padding: 10px;   
+            border-radius: 10px;   
+            float: right;   
+            margin: 6px 10px 0 10px;      
+            border: 1px solid #ccc;   
+            max-width: calc(100% - 102px)!important;
+            box-shadow: 0 0 3px #ccc;  
+        }   
+        .content li img.imgleft {    
+            float: left;    
+        }   
+        .content li img.imgright {    
+            float: right;    
+        }   
+        .content li span.spanleft {    
+            float: left;   
+            background-color: #fff;   
+        }   
+        .content li span.spanright {    
+            float: right;   
+            background-color: #f6ff00;   
+        }   
+        @media screen and (max-width: 374px) {
+            .footer input {
+                width: 56%;
+            }
+            .footer span {
+                width: 19%;
+            }
+        }
+        @media screen and (min-width: 441px) {
+            .footer span {
+                width: 12%;
+                margin-left: 10%;
+            }
+        }
+        input:hover {
+            cursor: text;
+        }
+    </style>  
+    
+</head>  
+<body>  
+    <div id="container">
+        <ul class="content"></ul> 
+    </div>
+    <div class="header">  
+        <span>弹幕发送界面</span>  
+        <span style="float: right;"></span>  
+    </div>           
+    <div class="footer">  
+            <div id="user_face_icon">  
+                <img src="/static/img/sloth-1.jpg" alt="">  
+            </div>  
+            <input id="text" type="text" placeholder="说点什么吧...">  
+            <span id="btn">发送</span>  
+    </div>   
 </body>
-</html>
+<script src="/static/module/socket/socket.io.js"></script>
+<script>
+    (function(){
+        var Config = {
+            baseUrl: '10.19.136.169:8080/',
+        };
+        var mySocket = (function() {
+            var socket = io(Config.baseUrl);
+
+            console.log('connected...');
+            
+            //监听事件
+            socket.on('comments', function(data) {
+                console.log(data);
+                myView.showSendSuccess();
+            });
+            //发送事件
+            var sendComments = function(content) {
+                socket.emit("comments", {
+                    courseId: '<%= id %>',
+                    content: content
+                });
+            };
+            return {
+                sendComments: sendComments
+            }
+        })();
+
+        //屏蔽浏览器差异，添加、删除事件监听的工具类
+        var EventUtil = {
+
+            addHandler: function (element, type, handler) {
+                if(element.addEventListener) {
+                    element.addEventListener(type, handler, false);
+                } else if(element.attachEvent) {
+                    element.attachEvent('on' + type, handler);
+                } else {
+                    element['on' + type] = handler;
+                }
+            },
+            removeHandler: function (element, type, handler) {
+                if(element.removeEventListener) {
+                    element.removeEventListener(type, handler, false);
+                } else if(element.detachEvent) {
+                    element.detachEvent('on' + type, handler);
+                } else {
+                    element['on' + type] = null;
+                }
+            }
+        };
+        (function(){   
+            var arrIcon = ['/static/img/sloth-1.jpg','/static/img/sloth-1.jpg'];   
+            var num = 0;     //控制头像改变   
+            var iNow = -1;    //用来累加改变左右浮动   
+            var icon = document.getElementById('user_face_icon').getElementsByTagName('img');   
+            var btn = document.getElementById('btn');   
+            var text = document.getElementById('text');   
+            var content = document.getElementsByTagName('ul')[0];   
+            var img = content.getElementsByTagName('img');   
+            var span = content.getElementsByTagName('span');   
+  
+            icon[0].onclick = function(){   
+                if(num==0){   
+                    this.src = arrIcon[1];   
+                    num = 1;   
+                }else if(num==1){   
+                    this.src = arrIcon[0];   
+                    num = 0;   
+                }                   
+            }   
+            btn.onclick = function(){   
+                if(text.value ==''){   
+                    alert('不能发送空消息');   
+                }else {   
+                    content.innerHTML = '<li><img src="'+arrIcon[num]+'"><span>'+text.value+'</span></li>' + content.innerHTML;   
+                    mySocket.sendComments(text.value);
+                    
+                    text.value = '';   
+     // 内容过多时,将滚动条放置到最底端   
+     // contentcontent.scrollTop=content.scrollHeight;     
+                }   
+            }   
+        })(); 
+    })();
+</script>
+<script>  
+          
+</script>    
+</html>  

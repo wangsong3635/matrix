@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+	<title>评论。。。</title>
+</head>
+<style>
+	textarea#comments {
+	    width: 100%;
+	    font-size: 20px;
+	    padding: 5px;
+	    box-sizing: border-box;
+	}
+	button#submit {
+		padding: 10px;
+		width: 100px;
+		height: 50px;
+		background-color: blue;
+		color: #fff;
+		border: none;
+		font-size: 20px;
+	}
+	.show {
+		display: block;
+	}
+	.hide {
+		display: none;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<div class="form">
+			<div>
+				<textarea name="comments" id="comments" cols="30" rows="10" placeholder="question..."></textarea>
+			</div>
+			<div>
+				<button id="submit">提交</button>
+			</div>
+		</div>
+		<div id="success_tip" class="hide">
+			发送成功
+		</div>
+	</div>
+	<script src="/static/module/socket/socket.io.js"></script>
+	<script>
+		(function(){
+			var Config = {
+				baseUrl: '10.19.136.169:8080/',
+			};
+			var mySocket = (function() {
+				var socket = io(Config.baseUrl);
+
+				console.log('connected...');
+				
+				//监听事件
+				socket.on('comments', function(data) {
+					console.log(data);
+					myView.showSendSuccess();
+				});
+				//发送事件
+				var sendComments = function(content) {
+					socket.emit("comments", {
+						courseId: '<%= id %>',
+						content: content
+					});
+				};
+				return {
+					sendComments: sendComments
+				}
+			})();
+
+			//屏蔽浏览器差异，添加、删除事件监听的工具类
+			var EventUtil = {
+
+			    addHandler: function (element, type, handler) {
+			        if(element.addEventListener) {
+			            element.addEventListener(type, handler, false);
+			        } else if(element.attachEvent) {
+			            element.attachEvent('on' + type, handler);
+			        } else {
+			            element['on' + type] = handler;
+			        }
+			    },
+			    removeHandler: function (element, type, handler) {
+			        if(element.removeEventListener) {
+			            element.removeEventListener(type, handler, false);
+			        } else if(element.detachEvent) {
+			            element.detachEvent('on' + type, handler);
+			        } else {
+			            element['on' + type] = null;
+			        }
+			    }
+			};
+
+			var myView = (function() {
+				var commentsDiv = document.getElementById('comments');
+				var submitBtn = document.getElementById('submit');
+				var success_tip = document.getElementById('success_tip');
+				EventUtil.addHandler(submitBtn, 'click', function() {
+					getComments();
+				});
+				var getComments = function() {
+					var content = commentsDiv.value;
+					console.log(content);
+					mySocket.sendComments(content);
+				};
+				var hideSuccessTip = function() {
+					success_tip.setAttribute('class', 'hide');
+				}
+				var showSendSuccess = function() {
+					success_tip.setAttribute('class', 'show');
+					setTimeout(hideSuccessTip, 3000);
+				}
+				return {
+					showSendSuccess: showSendSuccess
+				}
+			})();
+		})();
+	</script>
+</body>
+</html>

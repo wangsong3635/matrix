@@ -25,11 +25,12 @@ export default class extends think.controller.base {
 
 		console.log(' addCourse ...');
 		var socket = self.http.socket;
-		this.clients.addSocket(self.http.data.courseId, socket);
-		console.log('****************************');
-		console.log(self.http.data);
-		console.log('****************************');
-		this.emit('addsuccess', self.http.data.courseId);
+		if(self.http.data.addcourse === 'yes') {
+			//时间戳+四位随机数生成courseId
+			let courseId = new Date().getTime() + '' + Math.round(Math.random() * 10000);
+			this.clients.addSocket(courseId, socket);
+			this.emit('addsuccess', courseId);
+		}
 	}
 
 	commentsAction(self) {

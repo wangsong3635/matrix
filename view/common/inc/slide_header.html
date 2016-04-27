@@ -62,7 +62,7 @@
         overflow:hidden;
         z-index: 999;
         white-space:nowrap;
-        color:rgba(250,250,250,0.8);
+        color:rgba(250,250,250);
         -webkit-animation:mymove 8s;
       }
 
@@ -78,22 +78,24 @@
         top: 0;
         left: 0;
         z-index: 1000;
-        opacity: .7;
-        filter: Alpha(Opacity=70);
+        /*opacity: .7;*/
+        /*filter: Alpha(Opacity=70);*/
         background-color: #000;
     }
     .ws-2code {
         width: 400px;
         height: 400px;
         margin-left: -200px;
-        padding: 10px 0;
         position: fixed;
+        padding: 5px;
         top: 200px;
         left: 50%;
         z-index: 1001;
-        font-size: 12px;
-        text-align: center;
         background-color: #fff;
+    }
+    .ws-2code img{
+      width: 400px;
+      height: 400px;
     }
     </style>
 </head>
@@ -102,20 +104,11 @@
     <div class="noprint">选择浏览器“打印预览”预览效果</div>
   <%}%>
   <div class="first-page">
-    <div class="ws-2code">
-      <script type="text/javascript">
-        var _qrContent='http://10.19.136.169:8080/comments/?id=123456',
-            _qrLogo='',
-            _qrWidth=400,
-            _qrHeight=400,
-            _qrType = 'auto';
-        if(!_qrContent) 
-          var _qrContent =escape(document.location.href);
-          document.write(unescape("%3Cscript src='http://qrcode.leipi.org/js.html?qw="+_qrWidth+"&qh="+_qrHeight+"&qt="+_qrType+"&qc="+escape(_qrContent)+"&ql="+escape(_qrLogo)+"' type='text/javascript'%3E%3C/script%3E"));
-      </script>
+    <div class="ws-2code" id="ws_2code">
+      <!-- <img src="http://qrcoder.sinaapp.com?t=hello world"> -->
     </div>
   </div>
-  <div class="reveal hide">
+  <div class="reveal" id="reveal">
     
     <div id="ws-url">
       
@@ -129,6 +122,23 @@
   </div>
 </body>
 <script src="/static/module/reveal/js/reveal.js"></script>
+<script>
+  function show2code(data) {
+    var ws_2code = document.getElementById('ws_2code');
+    console.log(data);
+    var imgUrl = data.data.qr_filepath;
+    var imgNode = document.createElement('img');
+    imgNode.setAttribute('src', imgUrl);
+    ws_2code.appendChild(imgNode);
+  }
+</script>
+<script type="text/javascript">
+document.getElementsByClassName("first-page")[0].onclick = function(){
+  this.parentNode.removeChild(this);
+
+
+}
+</script>
 <script type="text/x-slide">
   <%-encodeURIComponent(slide.content) || '# No slideshare.'%>
 </script>
