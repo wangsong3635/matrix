@@ -24,7 +24,7 @@
            margin-bottom: 10px
         }
         ul li span {
-             width: (100% - 102px);
+             width: auto;
              overflow-wrap: break-word;
         }  
         #container {   
@@ -179,7 +179,7 @@
 <script>
     (function(){
         var Config = {
-            baseUrl: '10.19.136.169:8080/',
+            baseUrl: 'http://10.160.31.144:8080/',
         };
         var mySocket = (function() {
             var socket = io(Config.baseUrl);
@@ -189,7 +189,6 @@
             //监听事件
             socket.on('comments', function(data) {
                 console.log(data);
-                myView.showSendSuccess();
             });
             //发送事件
             var sendComments = function(content) {
@@ -248,13 +247,23 @@
             btn.onclick = function(){   
                 if(text.value ==''){   
                     alert('不能发送空消息');   
-                }else {   
-                    content.innerHTML = '<li><img src="'+arrIcon[num]+'"><span>'+text.value+'</span></li>' + content.innerHTML;   
+                }else {
+
+                    var newCommentLi = document.createElement('li');
+                    var newImg = document.createElement('img');
+                    newImg.setAttribute('src', arrIcon[num]);
+                    var newSpan = document.createElement('span');
+                    var newText = document.createTextNode(text.value);
+                    newSpan.appendChild(newText);
+                    newCommentLi.appendChild(newImg);
+                    newCommentLi.appendChild(newSpan);
+                    content.appendChild(newCommentLi);
+//                    content.innerHTML = '<li><img src="'+arrIcon[num]+'"><span>'+text.value+'</span></li>' + content.innerHTML;
                     mySocket.sendComments(text.value);
                     
-                    text.value = '';   
-     // 内容过多时,将滚动条放置到最底端   
-     // contentcontent.scrollTop=content.scrollHeight;     
+                    text.value = '';
+                    // 内容过多时,将滚动条放置到最底端
+                    content.scrollTop=content.scrollHeight;
                 }   
             }   
         })(); 

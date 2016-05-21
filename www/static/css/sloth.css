@@ -1,0 +1,41 @@
+@-webkit-keyframes mymove /*Safari and Chrome*/
+{
+    0% {right:0;}
+    100% {right:100%;}
+}
+.hide {
+    display: none;
+}
+.words{
+    overflow:hidden;
+    z-index: 999;
+    white-space:nowrap;
+    color: rgb(250,250,250);
+    -webkit-animation:mymove 8s;
+}
+.first-page {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    /*opacity: .7;*/
+    /*filter: Alpha(Opacity=70);*/
+    background-color: #000;
+}
+.ws-2code {
+    width: 400px;
+    height: 400px;
+    margin-left: -200px;
+    position: fixed;
+    padding: 5px;
+    top: 200px;
+    left: 50%;
+    z-index: 1001;
+    background-color: #fff;
+}
+.ws-2code img{
+    width: 400px;
+    height: 400px;
+}

@@ -22,7 +22,7 @@
     <%}else if(http.get('theme') || slide.theme){%>
     <link rel="stylesheet" href="/static/module/reveal/css/theme/<%=http.get('theme') || slide.theme%>.css" id="theme">
     <%}%>
-    
+    <link rel="stylesheet" href="/static/css/sloth.css">
     <!-- Printing and PDF exports -->
     <script>
       var link = document.createElement( 'link' );
@@ -55,48 +55,6 @@
       .reveal .slides li {
         text-transform: none;
       }
-    .hide {
-      display: none;
-    }
-    .words{
-        overflow:hidden;
-        z-index: 999;
-        white-space:nowrap;
-        color:rgba(250,250,250);
-        -webkit-animation:mymove 8s;
-      }
-
-      @-webkit-keyframes mymove /*Safari and Chrome*/
-      {
-        0% {right:0;}
-        100% {right:100%;}
-      }
-    .first-page {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        /*opacity: .7;*/
-        /*filter: Alpha(Opacity=70);*/
-        background-color: #000;
-    }
-    .ws-2code {
-        width: 400px;
-        height: 400px;
-        margin-left: -200px;
-        position: fixed;
-        padding: 5px;
-        top: 200px;
-        left: 50%;
-        z-index: 1001;
-        background-color: #fff;
-    }
-    .ws-2code img{
-      width: 400px;
-      height: 400px;
-    }
     </style>
 </head>
 <body>
@@ -105,14 +63,10 @@
   <%}%>
   <div class="first-page">
     <div class="ws-2code" id="ws_2code">
-      <!-- <img src="http://qrcoder.sinaapp.com?t=hello world"> -->
     </div>
   </div>
   <div class="reveal" id="reveal">
-    
-    <div id="ws-url">
-      
-    </div>
+
     <div id="ws-comments">
     </div>
 
@@ -123,21 +77,10 @@
 </body>
 <script src="/static/module/reveal/js/reveal.js"></script>
 <script>
-  function show2code(data) {
-    var ws_2code = document.getElementById('ws_2code');
-    console.log(data);
-    var imgUrl = data.data.qr_filepath;
-    var imgNode = document.createElement('img');
-    imgNode.setAttribute('src', imgUrl);
-    ws_2code.appendChild(imgNode);
-  }
+
 </script>
 <script type="text/javascript">
-document.getElementsByClassName("first-page")[0].onclick = function(){
-  this.parentNode.removeChild(this);
 
-
-}
 </script>
 <script type="text/x-slide">
   <%-encodeURIComponent(slide.content) || '# No slideshare.'%>

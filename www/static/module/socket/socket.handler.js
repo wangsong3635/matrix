@@ -1,8 +1,9 @@
-(function(){
+var sloth = (function(){
 	var Config = {
-		baseUrl: 'http://10.19.136.169:8080/',
-		commentsUrl: 'http://10.19.136.169:8080/comments/'
-	}
+		baseUrl: 'http://10.160.31.144:8080',
+		commentsUrl: 'http://10.160.31.144:8080/comments/'
+	};
+
 	var mySocket = (function() {
 		var socket = io(Config.baseUrl);
 
@@ -23,21 +24,21 @@
 	})();
 
 	var myView = (function() {
-		var urlDiv = document.getElementById('ws-url');
+		//准备页面元素
 		var commentsDiv = document.getElementById('ws-comments');
-		
-
-		var showTheUrl = function(id) {
-			urlDiv.innerHTML = Config.commentsUrl + '?id=' + id;
+		//定义二维码页面点击之后隐藏
+		document.getElementsByClassName("first-page")[0].onclick = function(){
+			this.parentNode.removeChild(this);
 		};
-		var showCode = function(id) {
+		var get2CodeUrl = function(id) {
 			var commentsUrl = Config.commentsUrl + '?id=' + id;
-			var codeRequestUrl = 'http://api.wwei.cn/wwei.html?data=' + commentsUrl +'&&version=1.0&apikey=20160427138671&callback=show2code';
+			var codeRequestUrl = 'http://api.wwei.cn/wwei.html?data=' + commentsUrl +'&&version=1.0&apikey=20160427138671&callback=sloth_show2code';
 			var scriptNode = document.createElement('script');
 			scriptNode.setAttribute('src', codeRequestUrl);
 			document.body.appendChild(scriptNode);
-		}
-		var word = function(text){
+		};
+
+		var showComments = function(text){
 		      this.content = text;
 		      this.node = document.createElement("span");
 		      this.draw = function(){
@@ -54,15 +55,22 @@
 		      this.node.addEventListener("webkitAnimationEnd",function(){
 		        this.parentNode.removeChild(this);
 		      });
-		    }
-
-		var hideComments = function() {
-			commentsDiv.setAttribute('class', 'hide');
-		}
+		    };
 
 		return {
-			showTheUrl: showCode,
-			showComments: word
+			showTheUrl: get2CodeUrl,
+			
+			showComments: showComments
 		}
 	})();
+
 })();
+
+var sloth_show2code = function(data) {
+	var ws_2code = document.getElementById('ws_2code');
+	console.log(data);
+	var imgUrl = data.data.qr_filepath;
+	var imgNode = document.createElement('img');
+	imgNode.setAttribute('src', imgUrl);
+	ws_2code.appendChild(imgNode);
+};
