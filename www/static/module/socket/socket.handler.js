@@ -1,7 +1,7 @@
 var sloth = (function(){
 	var Config = {
-		baseUrl: 'http://10.160.31.144:8080',
-		commentsUrl: 'http://10.160.31.144:8080/comments/'
+		baseUrl: 'http://30.10.104.23:8080',
+		commentsUrl: 'http://30.10.104.23:8080/comments/'
 	};
 
 	var mySocket = (function() {
